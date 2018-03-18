@@ -8,5 +8,6 @@ done
 dir=01_dockerfiles
 for i in ex{00..03}; do
 	docker build -t $i $dir/$i |& tee $dir/$i/build.log
-	docker run -it $i |& tee $dir/$i/run.log
+	echo "docker run -it $i" > $dir/$i/run.sh
+	chmod 755 $dir/$i/run.sh
 done
