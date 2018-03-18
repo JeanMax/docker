@@ -1,0 +1,23 @@
+#!/bin/bash -ex
+
+SUPER_DIR=toto
+SUPER_SCRIPT=tata.py
+
+steal_snippet() {
+	curl --silent flask.pocoo.org \
+		| grep -B 5 "Hello World" \
+		| sed 's/ *<.*>//g'
+}
+
+mkdir -p "$HOME/$SUPER_DIR"
+steal_snippet > "$HOME/$SUPER_DIR/$SUPER_SCRIPT"
+
+docker run -di \
+	   --name=Abathur \
+	   --volume="$HOME/$SUPER_DIR:/root" \
+	   --env="FLASK_APP=/root/$SUPER_SCRIPT" \
+	   -p 3000:3000 \
+	   python:2-slim
+
+docker exec Abathur /bin/bash -c \
+	   "pip install Flask && flask run -h 0.0.0.0 -p 3000"
