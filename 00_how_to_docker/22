@@ -1,0 +1,5 @@
+TOKEN="$(docker-machine ssh Char -- docker swarm join-token -q worker)"
+IP="$(docker-machine ip Char)"
+
+docker-machine ssh Aiur -- \
+			   docker swarm join --token="$TOKEN" "$IP"
